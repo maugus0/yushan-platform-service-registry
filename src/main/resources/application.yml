@@ -1,0 +1,50 @@
+# Server Configuration
+server:
+  port: 8761  # Standard Eureka port
+
+# Spring Application Configuration
+spring:
+  application:
+    name: eureka-service-registry
+
+# Eureka Server Configuration
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+
+  client:
+    # Don't register itself as a client
+    register-with-eureka: false
+    fetch-registry: false
+
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+  server:
+    # Disable self-preservation mode in development
+    # WARNING: Enable this in production!
+    enable-self-preservation: false
+
+    # How often to check for expired services (milliseconds)
+    eviction-interval-timer-in-ms: 10000
+
+    # Response cache update interval
+    response-cache-update-interval-ms: 5000
+
+# Actuator Configuration (Health Checks)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# Logging Configuration
+logging:
+  level:
+    com.netflix.eureka: INFO
+    com.netflix.discovery: INFO
+    root: INFO

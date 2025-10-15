@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yushan-eureka-registry
+    ports:
+      - "8761:8761"
+    environment:
+      # JVM Options for better performance
+      - JAVA_OPTS=-Xms256m -Xmx512m
+      # Spring Profile (optional)
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - yushan-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    volumes:
+      # Optional: Mount logs directory
+      - ./logs:/app/logs
+
+networks:
+  yushan-network:
+    driver: bridge
+    name: yushan-platform-network
